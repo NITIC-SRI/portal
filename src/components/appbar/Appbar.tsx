@@ -92,7 +92,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function Appbar(props: any) {
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const handleListItemClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -156,7 +156,7 @@ export default function Appbar(props: any) {
         </DrawerHeader>
         <Divider />
         <List>
-          {["タイムライン", "質問箱", "記事", "過去問"].map((text, index) => (
+          {["タイムライン", "質問箱", "記事", "過去問", "掲示板"].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={{
@@ -191,6 +191,8 @@ export default function Appbar(props: any) {
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
                 }}
+                selected={selectedIndex === index+5}
+                onClick={(event) => handleListItemClick(event, index+5)}
               >
                 <ListItemIcon
                   sx={{
