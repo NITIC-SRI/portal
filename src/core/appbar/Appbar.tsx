@@ -1,9 +1,14 @@
 "use client";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import MailIcon from "@mui/icons-material/Mail";
+import CloudSyncIcon from "@mui/icons-material/CloudSync";
+import DescriptionIcon from "@mui/icons-material/Description";
+import GroupsIcon from "@mui/icons-material/Groups";
+import HelpIcon from "@mui/icons-material/Help";
+import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+import QuizIcon from "@mui/icons-material/Quiz";
+import SettingsIcon from "@mui/icons-material/Settings";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -19,7 +24,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { CSSObject, Theme, styled, useTheme } from "@mui/material/styles";
 import * as React from "react";
-
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -91,15 +95,24 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function Appbar(props: any) {
+interface Props {
+  children: React.ReactNode;
+  setApp: (index: number) => void;
+}
+
+export default function Appbar(props: Props) {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-  const handleListItemClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    index: number,
-  ) => {
-    setSelectedIndex(index);
+  const handleChangeApp = (index: number) => {
+    props.setApp(index);
   };
+
+  const handleListItemClick = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
+      setSelectedIndex(index);
+    },
+    []
+  );
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
@@ -140,7 +153,7 @@ export default function Appbar(props: any) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-              一関高専学生コミュニティ
+            一関高専学生コミュニティ
           </Typography>
         </Toolbar>
       </AppBar>
@@ -156,34 +169,50 @@ export default function Appbar(props: any) {
         </DrawerHeader>
         <Divider />
         <List>
-          {["タイムライン", "質問箱", "記事", "過去問", "掲示板"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-                selected={selectedIndex === index}
-                onClick={(event) => handleListItemClick(event, index)}
-              >
-                <ListItemIcon
+          {["ホーム", "知恵袋", "記事", "過去問", "掲示板"].map(
+            (text, index) => (
+              <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                {/* Dynamic route based on text */}
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                  selected={selectedIndex === index}
+                  onClick={(event) => {
+                    handleListItemClick(event, index);
+                    handleChangeApp(index);
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {index === 0 ? (
+                      <HomeIcon />
+                    ) : index === 1 ? (
+                      <QuizIcon />
+                    ) : index === 2 ? (
+                      <DescriptionIcon />
+                    ) : index === 3 ? (
+                      <CloudSyncIcon />
+                    ) : (
+                      <GroupsIcon />
+                    )}
+                  </ListItemIcon>
+                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+            )
+          )}
         </List>
         <Divider />
         <List>
-          {["設定"].map((text, index) => (
+          {["設定", "使い方"].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={{
@@ -191,8 +220,11 @@ export default function Appbar(props: any) {
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
                 }}
-                selected={selectedIndex === index+5}
-                onClick={(event) => handleListItemClick(event, index+5)}
+                selected={selectedIndex === index + 5}
+                onClick={(event) => {
+                  handleListItemClick(event, index + 5);
+                  handleChangeApp(index + 5);
+                }}
               >
                 <ListItemIcon
                   sx={{
@@ -201,7 +233,7 @@ export default function Appbar(props: any) {
                     justifyContent: "center",
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {index === 0 ? <SettingsIcon /> : <HelpIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
